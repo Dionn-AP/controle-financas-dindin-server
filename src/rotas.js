@@ -30,6 +30,7 @@ rota.delete('/transacao/:id', transacoes.excluirTransacao);
 
 //ROTAS CATEGORIA
 rota.get('/categoria', categorias.listarCategoria);
+rota.post('/categoria', categorias.adicionarCategoria);
 
 
 module.exports = rota;
