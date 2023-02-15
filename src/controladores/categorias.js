@@ -53,7 +53,7 @@ const adicionarCategoria = async (req, res) => {
             return res.status(422).json({ mensagem: "Não foi possível cadastrar a categoria" });
         }
 
-        return res.status(201).json({ message: "Nova categoria cadastrada com sucesso" });
+        return res.status(201).json(novaCategoria[novaCategoria.length - 1]);
     } catch (error) {
         return res.status(400).json(error.message);
     }
@@ -98,7 +98,7 @@ const deletarCategoria = async (req, res) => {
             return res.status(400).json({ "mensagem": "A categoria não foi excluída" });
         }
 
-        return res.status(200).json({ mensagem: "Categoria excluída com sucesso." });
+        return res.status(200).json({ mensagem: "Categoria excluída com sucesso" });
 
     } catch (error) {
         return res.status(400).json(error.message);
