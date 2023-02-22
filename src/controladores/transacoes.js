@@ -54,11 +54,11 @@ const detalharTransacao = async (req, res) => {
             .first('*');
 
         if (!transacao) {
-            return res.status(404).json({ "mensagem": "Transação inexistente." });
+            return res.status(404).json({ mensagem: "Transação inexistente." });
         }
 
         if (transacao.usuario_id !== usuario.id) {
-            return res.status(404).json({ "mensagem": "Transação inexistente." });
+            return res.status(404).json({ mensagem: "Transação inexistente." });
         }
 
         const nomeCategoria = await knex('categorias')
@@ -77,7 +77,7 @@ const cadastrarTransacao = async (req, res) => {
     const { usuario } = req;
 
     if (tipo !== 'entrada' && tipo !== 'saida') {
-        return res.status(400).json({ "mensagem": "O tipo de transação especificado é inválido." });
+        return res.status(400).json({ mensagem: "O tipo de transação especificado é inválido." });
     }
 
     try {
@@ -88,7 +88,7 @@ const cadastrarTransacao = async (req, res) => {
             .where({ id: categoria_id }).first('*');
 
         if (!categoriaEncontrada) {
-            return res.status(400).json({ "mensagem": "Não existe categoria para o Id informado." });
+            return res.status(400).json({ mensagem: "Não existe categoria para o Id informado." });
         }
 
         const cadastroTransacao = await knex('transacoes').insert({
@@ -101,7 +101,7 @@ const cadastrarTransacao = async (req, res) => {
         }).returning('*');
 
         if (!cadastroTransacao) {
-            return res.status(400).json({ "mensagem": "Não foi possível cadastrar a transação." });
+            return res.status(400).json({ mensagem: "Não foi possível cadastrar a transação." });
         }
 
         return res.status(200).json({
@@ -126,7 +126,7 @@ const atualizarTransacao = async (req, res) => {
     const { id: idTransacao } = req.params;
 
     if (tipo !== 'entrada' && tipo !== 'saida') {
-        return res.status(400).json({ "mensagem": "O tipo de transação especificado é inválido." });
+        return res.status(400).json({ mensagem: "O tipo de transação especificado é inválido." });
     }
 
     try {
@@ -135,18 +135,18 @@ const atualizarTransacao = async (req, res) => {
             .where({ id: idTransacao }).first("*");
 
         if (!transacaoEncontrada) {
-            return res.status(404).json({ "mensagem": "transação inexistente." });
+            return res.status(404).json({ mensagem: "transação inexistente." });
         }
 
         if (transacaoEncontrada.usuario_id !== usuario.id) {
-            return res.status(404).json({ "mensagem": "Você só pode atualizar suas próprias transações." });
+            return res.status(404).json({ mensagem: "Você só pode atualizar suas próprias transações." });
         }
 
         const existeCategoria = await knex('categorias')
             .where({ id: categoria_id }).first('*');
 
         if (!existeCategoria) {
-            return res.status(404).json({ "mensagem": "Categoria da transação inexistente." });
+            return res.status(404).json({ mensagem: "Categoria da transação inexistente." });
         }
 
         const novosDadosTransacao = {
@@ -162,7 +162,7 @@ const atualizarTransacao = async (req, res) => {
             .where({ id: idTransacao }).returning('*');
 
         if (!atualizarTransacao) {
-            return res.status(400).json({ "mensagem": "Não foi possível atualizar a transação." });
+            return res.status(400).json({ mensagem: "Não foi possível atualizar a transação." });
         }
 
         return res.status(204).json();
@@ -183,11 +183,11 @@ const excluirTransacao = async (req, res) => {
             .first('*');
 
         if (!encontrarTransacao) {
-            return res.status(404).json({ "mensagem": "transação inexistente." });
+            return res.status(404).json({ mensagem: "transação inexistente." });
         }
 
         if (encontrarTransacao.usuario_id !== usuario.id) {
-            return res.status(404).json({ "mensagem": "transação inexistente." });
+            return res.status(404).json({ mensagem: "transação inexistente." });
         }
 
         const transacaoExcluida = await knex('transacoes')
@@ -195,10 +195,10 @@ const excluirTransacao = async (req, res) => {
             .del();
 
         if (!transacaoExcluida) {
-            return res.status(400).json({ "mensagem": "A transação não foi excluido" });
+            return res.status(400).json({ mensagem: "A transação não foi excluido" });
         }
 
-        return res.status(200).json({ "mensagem": "Transação excluida com sucesso." });
+        return res.status(200).json({ mensagem: "Transação excluida com sucesso." });
 
     } catch (error) {
         return res.status(400).json(error.message);
@@ -213,7 +213,7 @@ const obterExtrato = async (req, res) => {
             .where({ usuario_id: usuario.id }).returning('*');
 
         if (!transacoes) {
-            return res.status(200).json({ "mensagem": "Não existem transacoes." });
+            return res.status(200).json({ mensagem: "Não existem transacoes." });
         }
 
         let saida = 0;
