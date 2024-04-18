@@ -16,7 +16,7 @@ rota.post('/login', login.login);
 rota.use(validarLogin);
 
 rota.get('/usuario', usuarios.listarPerfilUsuarios);
-rota.put('/usuario/', usuarios.atualizarUsuario);
+rota.put('/usuario', usuarios.atualizarUsuario);
 
 
 //ROTAS TRANSAÇÕES
