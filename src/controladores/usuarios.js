@@ -12,7 +12,7 @@ const cadastrarUsuario = async (req, res) => {
     await schemaCadastroUsuario.validate(req.body);
 
     const emailExistente = await knex("usuarios").where({ email }).first();
-
+    
     if (emailExistente) {
       return res
         .status(400)
@@ -96,7 +96,11 @@ const atualizarUsuario = async (req, res) => {
         .json({ mensagem: "Não foi possível atualizar o usuario." });
     }
 
-    return res.status(200).json({ ...usuarioAtualizado });
+    return res.status(200).json({
+      id: usuarioAtualizado[0].id,
+      nome: usuarioAtualizado[0].nome,
+      email: usuarioAtualizado[0].email
+    });
   } catch (error) {
     return res.status(400).json(error.message);
   }
