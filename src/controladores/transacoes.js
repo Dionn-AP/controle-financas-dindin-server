@@ -1,8 +1,7 @@
 const knex = require('../conexao');
 const { schemaCadastroTransacao } = require('../funcoes_verificacao/verificar_requisicao_body');
 
-const listarTransacoes = async (req, res) => {
-    const { usuario } = req;
+const listarTransacoes = async (usuario, req) => {
     const { filtro } = req.query;
 
     try {
@@ -36,11 +35,13 @@ const listarTransacoes = async (req, res) => {
                 return res.status(200).json(...filtroTransacao);
             }
         }
+        return transacoes;
 
-        return res.status(200).json(transacoes);
+        //return res.status(200).json(transacoes);
 
     } catch (error) {
-        return res.status(400).json(error.message);
+        throw new Error(error.message)
+        //return res.status(400).json(error.message);
     }
 }
 
@@ -205,27 +206,22 @@ const excluirTransacao = async (req, res) => {
     }
 }
 
-const obterExtrato = async (req, res) => {
-    const { usuario } = req;
-
+const obterExtrato = async (usuario) => {
     try {
         const transacoes = await knex('transacoes')
             .where({ usuario_id: usuario.id }).returning('*');
 
-        if (!transacoes) {
-            return res.status(200).json({ mensagem: "Não existem transacoes." });
+        if (!transacoes || transacoes.length === 0) {
+            return { mensagem: "Não existem transacoes." };
         }
 
         let saida = 0;
+        let entrada = 0;
+
         for (const transacao of transacoes) {
             if (transacao.tipo === 'saida') {
                 saida += transacao.valor;
-            }
-        }
-
-        let entrada = 0;
-        for (const transacao of transacoes) {
-            if (transacao.tipo === 'entrada') {
+            } else {
                 entrada += transacao.valor;
             }
         }
@@ -236,12 +232,11 @@ const obterExtrato = async (req, res) => {
             saldo: entrada - saida
         }
 
-        return res.status(200).json(extrato);
+        return extrato;
 
     } catch (error) {
-        return res.status(400).json(error.message);
+        throw new Error(error.message);
     }
-
 }
 
 module.exports = {

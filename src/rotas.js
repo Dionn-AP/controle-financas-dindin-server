@@ -4,7 +4,8 @@ const categorias = require('./controladores/categorias');
 const usuarios = require('./controladores/usuarios');
 const login = require('./controladores/login');
 const validarLogin = require('./intermediarios/validacao_usuario');
-const transacoes = require('./controladores/transacoes');
+const { listarTransacoes, cadastrarTransacao, detalharTransacao, atualizarTransacao, obterExtrato, excluirTransacao } = require('./controladores/transacoes');
+const relatorios = require('./utils/pdf_report');
 
 const rota = express();
 
@@ -20,17 +21,42 @@ rota.put('/usuario', usuarios.atualizarUsuario);
 
 
 //ROTAS TRANSAÇÕES
-rota.get('/transacao/extrato', transacoes.obterExtrato);
-rota.get('/transacao', transacoes.listarTransacoes);
-rota.get('/transacao/:id', transacoes.detalharTransacao);
-rota.post('/transacao', transacoes.cadastrarTransacao);
-rota.put('/transacao/:id', transacoes.atualizarTransacao);
-rota.delete('/transacao/:id', transacoes.excluirTransacao);
+rota.get('/transacao/extrato', async (req, res) => {
+    const { usuario } = req;
+
+    try {
+        const extrato = await obterExtrato(usuario);
+        return res.status(200).json(extrato);
+    } catch (error) {
+        console.error(error); // Log do erro para diagnóstico
+        res.status(500).send('Erro ao obter extrato');
+    }
+});
+
+rota.get('/transacao', async (req, res) => {
+    const { usuario } = req;
+
+    try {
+        const transacoes = await listarTransacoes(usuario, req);
+        return res.status(200).json(transacoes);
+    } catch (error) {
+        console.error(error); // Log do erro para diagnóstico
+        res.status(500).send('Erro ao listar transações');
+    }
+});
+
+rota.get('/transacao/:id', detalharTransacao);
+rota.post('/transacao', cadastrarTransacao);
+rota.put('/transacao/:id', atualizarTransacao);
+rota.delete('/transacao/:id', excluirTransacao);
 
 
 //ROTAS CATEGORIA
 rota.get('/categoria', categorias.listarCategoria);
 rota.post('/categoria', categorias.adicionarCategoria);
 rota.delete('/categoria/:id', categorias.deletarCategoria);
+
+//ROTA DE RELATÓRIO
+rota.get('/relatorio', relatorios.geradorDePdf);
 
 module.exports = rota;
