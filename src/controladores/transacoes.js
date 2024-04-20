@@ -25,23 +25,20 @@ const listarTransacoes = async (usuario, req) => {
                     });
                     transacoesSelecionadas.push(...filtroTransacao)
                 }
-                return res.status(200).json(transacoesSelecionadas);
+                return transacoesSelecionadas;
             }
 
             if (filtro.length === 1) {
                 const filtroTransacao = transacoes.filter(transacao => {
                     return transacao.categoria_nome === filtro[0];
                 });
-                return res.status(200).json(...filtroTransacao);
+                return {...filtroTransacao};
             }
         }
         return transacoes;
 
-        //return res.status(200).json(transacoes);
-
     } catch (error) {
         throw new Error(error.message)
-        //return res.status(400).json(error.message);
     }
 }
 
