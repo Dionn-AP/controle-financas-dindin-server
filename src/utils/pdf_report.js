@@ -68,6 +68,9 @@ const geradorDePdf = async (req, res) => {
                 },
                 categorie: {
                     fontSize: 10
+                },
+                type: {
+                    fontSize: 10
                 }
             }
         };
@@ -90,44 +93,34 @@ const geradorDePdf = async (req, res) => {
 function createTransactionTable(data) {
     const tableBody = [];
     const headerRow = [
-        {
-            text: 'Descrição',
-            bold: true
-        },
-        {
-            text: 'Valor',
-            bold: true
-        },
-        {
-            text: 'Data',
-            bold: true
-        },
-        {
-            text: 'Categoria',
-            bold: true
-        }
+        { text: 'Descrição', bold: true },
+        { text: 'Valor', bold: true },
+        { text: 'Data', bold: true },
+        { text: 'Categoria', bold: true },
+        { text: 'Tipo', bold: true } // Adiciona o header 'Tipo'
     ];
 
     tableBody.push(headerRow);
 
     data.forEach(transaction => {
         const row = [
-            { text: transaction.descricao, style: 'description'},
+            { text: transaction.descricao, style: 'description' },
             { text: formatCurrency(transaction.valor), style: 'value' }, // Aplica o estilo 'value' para os valores
-            { text: formatDate(transaction.data), style: 'date'},
-            { text: transaction.categoria_nome, style: 'categorie' }
+            { text: formatDate(transaction.data), style: 'date' },
+            { text: transaction.categoria_nome, style: 'categorie' },
+            { text: transaction.tipo.charAt(0).toUpperCase() + transaction.tiop.slice(1), style: 'type' } // Adiciona o tipo de transação
         ];
         tableBody.push(row);
     });
 
     // Adiciona uma linha com o total dos valores de transação
     const totalValue = data.reduce((acc, curr) => acc + curr.valor, 0);
-    const totalRow = [{ text: 'Total', bold: true }, { text: formatCurrency(totalValue), bold: true, style: 'value' }, '', ''];
+    const totalRow = [{ text: 'Total', bold: true }, { text: formatCurrency(totalValue), bold: true, style: 'value' }, '', '', ''];
     tableBody.push(totalRow);
 
     return {
         table: {
-            widths: ['*', 'auto', 'auto', '*'],
+            widths: ['*', 'auto', 'auto', '*', 'auto'],
             body: tableBody
         }
     };
