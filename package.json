@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "![](https://i.imgur.com/xG74tOh.png)",
   "main": "index.js",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "dev": "nodemon ./src/index.js",
     "start": "node ./src/index.js"
@@ -19,6 +22,7 @@
   },
   "homepage": "https://github.com/Dionn-AP/desafio-M03-backend#readme",
   "dependencies": {
+    "@vercel/postgres": "^0.8.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
