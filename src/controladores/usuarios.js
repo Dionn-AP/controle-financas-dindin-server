@@ -1,5 +1,4 @@
 const knex = require("../conexao");
-const db = require("../conexao");
 const bcrypt = require("bcrypt");
 const {
   schemaCadastroUsuario,
@@ -12,7 +11,7 @@ const cadastrarUsuario = async (req, res) => {
   try {
     await schemaCadastroUsuario.validate(req.body);
 
-    const emailExistente = await db("usuarios").where({ email }).first();
+    const emailExistente = await knex("usuarios").where({ email }).first();
     
     if (emailExistente) {
       return res
@@ -24,7 +23,7 @@ const cadastrarUsuario = async (req, res) => {
 
     const senhaCriptografada = await bcrypt.hash(senha, 10);
 
-    const usuario = await db("usuarios").insert({
+    const usuario = await knex("usuarios").insert({
       nome,
       email,
       senha: senhaCriptografada,
@@ -36,10 +35,10 @@ const cadastrarUsuario = async (req, res) => {
           .json({ mensagem: "Não foi possivel cadastar o usuario" });
       }
 
-    const novoUsuario = await db("usuarios").where({ email }).first();
+    const novoUsuario = await knex("usuarios").where({ email }).first();
 
     for (const cat of categoriasPadrao) {
-      await db("categorias").insert({
+      await knex("categorias").insert({
         nome: cat.nome,
         descricao: cat.descricao,
         usuario_id: novoUsuario.id,
